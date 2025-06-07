@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Especial</title>
+    <style>
+        /* --- Configurações Globais e Fundo --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fddde6; /* Cor de fundo solicitada */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Container Principal --- */
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        /* --- Estilo do Envelope --- */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            width: 280px;
+            height: 180px;
+            margin: 0 auto 30px auto; /* Espaço abaixo do envelope */
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Parte de trás do envelope */
+        .envelope .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffb3c1;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* O papel/carta dentro do envelope */
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 100%); /* Inicia escondido para baixo */
+            opacity: 0; /* Inicia invisível */
+            width: 90%;
+            height: 90%;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: #e53935; /* Cor do coração */
+            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out; /* Transição para aparecer */
+            z-index: 1;
+        }
+
+        /* Coração. Poderia ser uma imagem, mas um emoji funciona bem! */
+        .heart {
+            transform: scale(0);
+            transition: transform 0.5s 0.6s ease; /* Animação do coração aparecer com atraso */
+        }
+
+        /* Aba superior do envelope */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            background-color: #ffc2d1;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            transform-origin: bottom;
+            transition: transform 0.5s ease-in-out;
+            z-index: 3;
+        }
+
+        /* Formato de triângulo para a aba */
+        .flap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 99px solid #ffb3c1; /* Cor da parte de trás */
+        }
+
+        /* Animação de abrir */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translate(-50%, -60px);
+            opacity: 1; /* Torna o papel visível */
+        }
+
+        .envelope-wrapper.open .heart {
+            transform: scale(1);
+        }
+
+
+        /* --- Botão Voltar --- */
+        .back-button {
+            padding: 12px 25px;
+            background-color: #c2185b; /* Rosa para o botão */
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #fb6f92;
+            transform: translateY(-2px);
+        }
+
+        /* --- Estilo da Div/Modal de Mensagem --- */
+        .modal {
+            display: none; /* Inicia escondido */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #fff1f4, #ffffff);
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+            text-align: center;
+            animation: fadeInScale 0.5s ease-out;
+        }
+
+        /* Animação de entrada do Modal */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #ff8fab;
+        }
+
+        .modal-content h2 {
+            color: #d6336c;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="envelope-wrapper" id="envelope">
+            <div class="envelope">
+                <div class="letter" id="letter">
+                    <div class="heart">❤️</div>
+                </div>
+                <div class="flap"></div>
+                <div class="back"></div>
+            </div>
+        </div>
+        
+        <a href="./amor.html" class="back-button" id="backBtn">← Voltar</a>
+    </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeBtn">&times;</span>
+            <h2>Para o amor da minha vida, Jhonata</h2>
+            <p>
+Você chegou na minha vida como quem não quer nada… e agora é tudo.
+Desde o dia 30/04, quando a gente começou a ficar, até hoje, cada momento contigo é tipo episódio de série boa: cheio de emoção, um pouco de drama, e muitas risadas no meio.
+Teve o primeiro selinho no dia 15/05 — um “plim” no coração que parecia trailer de filme romântico(Nunca vou esquecer do "vem!", ainda bem que você não ouviu). Depois, no dia 20/05, veio o beijo de verdade, aquele que fez até os anjos chorarem de tanta emoção(ou talvez por desgosto, já que eu que tomei a atitude, né). Nosso primeiro encontro, dia 06/05, foi tipo o prólogo do nosso livro — e olha, que livro bom! Comédia romântica com pitadas de novela mexicana, brigas por amizades que parecem vilões secundários, mas com um final sempre fofo (porque a protagonista aqui te ama demais e não larga o "mocinho" por nada nesse mundo!).
+E aí chegou o dia 07/07, o mais especial de todos… quando a gente decidiu que era pra valer(na verdade demorou demais, né, jesus).
+ Nosso relacionamento tem altos, baixos, momentos que eu te olho com cara de "vou te bater com amor" e outros que eu só quero te abraçar até o tempo parar. E mesmo com os desafios, eu nunca duvidei: é você, sempre foi você.
+Obrigada por existir, por ser meu parceiro, meu melhor amigo, meu beijo favorito e o motivo do meu sorriso bobo no meio do dia. Eu te amo mais do que hamburguer, estrogonofe e sorvete de ovomaltine (e olha que isso é amor de verdade). 
+Com todo meu carinho (e minhas piadas ruins mais meu estresse), Carol
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- Lógica de Interação (JavaScript) ---
+
+        // Pega os elementos do HTML que vamos usar
+        const envelope = document.getElementById('envelope');
+        const letter = document.getElementById('letter');
+        const modal = document.getElementById('messageModal');
+        const closeBtn = document.getElementById('closeBtn');
+        const backBtn = document.getElementById('backBtn'); // NOVO: Pega o botão voltar
+
+        let envelopeOpen = false; // Variável para controlar se o envelope está aberto
+
+        // 1. Ação ao clicar no ENVELOPE
+        envelope.addEventListener('click', () => {
+            if (!envelopeOpen) {
+                envelope.classList.add('open');
+                envelopeOpen = true;
+            }
+        });
+
+        // 2. Ação ao clicar no PAPEL (carta)
+        letter.addEventListener('click', (event) => {
+            event.stopPropagation();
+            modal.style.display = 'flex';
+        });
+
+        // Função para fechar o modal e resetar o envelope
+        function closeModal() {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                envelope.classList.remove('open');
+                envelopeOpen = false;
+            }, 300);
+        }
+
+        // 3. Ação para FECHAR o modal (clicando no 'X')
+        closeBtn.addEventListener('click', closeModal);
+
+        // 4. Ação opcional: fechar o modal clicando fora da caixa de texto
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+
+        // 5. NOVO: Ação para o botão VOLTAR
+        backBtn.addEventListener('click', (event) => {
+            // Previne a ação padrão do link (que é ir para o topo da página)
+            event.preventDefault(); 
+            // Usa o histórico do navegador para voltar à página anterior
+            window.history.back();
+        });
+
+    </script>
+
+</body>
+</html>

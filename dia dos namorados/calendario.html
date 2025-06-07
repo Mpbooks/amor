@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Tempo Juntos ⏳❤️</title>
+    <style>
+        /* --- Estilos base (mantendo a consistência) --- */
+        body {
+            font-family: sans-serif;
+            background-color: #fddde6; /* Rosa Claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .container {
+            background-color: #ffeef2;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+
+        header img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+
+        /* --- Estilos para o Calendário do Amor --- */
+        .calendario-amor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .foto-casal {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        /* Novo container para o contador em grade */
+        .contador-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .tempo-box {
+            background-color: white;
+            padding: 10px 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tempo-box span {
+            display: block;
+            font-size: 2em; /* 32px */
+            color: #e91e63;
+            font-weight: bold;
+        }
+        
+        .tempo-box p {
+            margin: 2px 0 0 0;
+            font-size: 0.7em; /* 11.2px */
+            text-transform: uppercase;
+            color: #555;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Botão para voltar */
+        .botao-voltar {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: #e91e63;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .botao-voltar:hover {
+            background-color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./laco.png" alt="Laço">
+            <h1>Te Amo Todo Esse Tempo...</h1>
+        </header>
+
+        <main class="calendario-amor">
+            <img src="./ourphotos/11.jpg" alt="Foto do casal" class="foto-casal">
+
+            <div class="contador-grid">
+                <div class="tempo-box">
+                    <span id="anos">0</span>
+                    <p>Anos</p>
+                </div>
+                <div class="tempo-box">
+                    <span id="meses">0</span>
+                    <p>Meses</p>
+                </div>
+                <div class="tempo-box">
+                    <span id="dias">0</span>
+                    <p>Dias</p>
+                </div>
+                <div class="tempo-box">
+                    <span id="horas">0</span>
+                    <p>Horas</p>
+                </div>
+                <div class="tempo-box">
+                    <span id="minutos">0</span>
+                    <p>Minutos</p>
+                </div>
+                <div class="tempo-box">
+                    <span id="segundos">0</span>
+                    <p>Segundos</p>
+                </div>
+            </div>
+
+            <a href="amor.html" class="botao-voltar">← Voltar</a>
+        </main>
+    </div>
+
+    <script>
+        // --- Script para o contador em tempo real ---
+
+        // Defina a data de início do relacionamento.
+        // Formato: 'YYYY-MM-DDTHH:mm:ss'
+        const dataInicio = new Date('2023-07-07T00:00:00');
+
+        function atualizarContador() {
+            const agora = new Date();
+            let tempDate = new Date(dataInicio);
+
+            // --- Cálculos de Anos, Meses e Dias ---
+            let anos = agora.getFullYear() - tempDate.getFullYear();
+            tempDate.setFullYear(tempDate.getFullYear() + anos);
+            if (tempDate > agora) {
+                anos--;
+                tempDate.setFullYear(tempDate.getFullYear() - 1);
+            }
+
+            let meses = agora.getMonth() - tempDate.getMonth();
+            if (meses < 0) {
+                meses += 12;
+            }
+            tempDate.setMonth(tempDate.getMonth() + meses);
+            if (tempDate > agora) {
+                meses--;
+                tempDate.setMonth(tempDate.getMonth() - 1);
+            }
+
+            let dias = Math.floor((agora - tempDate) / (1000 * 60 * 60 * 24));
+            
+            // --- Cálculos de Horas, Minutos e Segundos (Resto do dia atual) ---
+            const horas = agora.getHours();
+            const minutos = agora.getMinutes();
+            const segundos = agora.getSeconds();
+
+            // Função para garantir dois dígitos (ex: 07 em vez de 7)
+            const pad = (num) => String(num).padStart(2, '0');
+
+            // Atualiza os elementos na página
+            document.getElementById('anos').textContent = anos;
+            document.getElementById('meses').textContent = meses;
+            document.getElementById('dias').textContent = dias;
+            document.getElementById('horas').textContent = pad(horas);
+            document.getElementById('minutos').textContent = pad(minutos);
+            document.getElementById('segundos').textContent = pad(segundos);
+        }
+
+        // Executa a função a cada 1000 milissegundos (1 segundo)
+        setInterval(atualizarContador, 1000);
+
+        // Executa uma vez logo ao carregar a página
+        atualizarContador();
+    </script>
+</body>
+</html>

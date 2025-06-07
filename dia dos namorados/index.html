@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Dia</title>
+    <style>
+        body {
+    font-family: sans-serif;
+    background-color: #fddde6; /* Rosa Claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #ffeef2;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 320px; /* Largura semelhante à imagem */
+}
+
+header img {
+    width: 50px; /* Ajuste conforme necessário */
+    margin-bottom: 10px;
+}
+
+header h1 {
+    color: #e91e63;
+    margin-bottom: 5px;
+}
+
+.senha-input {
+    display: flex;
+    align-items: center;
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.lock-icon {
+    margin-right: 5px;
+    color: #4caf50;
+}
+
+.senha-input input {
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    outline: none;
+}
+
+.teclado {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.teclado button {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.teclado button:hover {
+    background-color: #ddd;
+}
+
+.teclado button:active {
+    background-color: #ccc;
+}
+
+#apagar {
+    background-color: #ffcdd2;
+    color: #d32f2f;
+}
+
+#apagar:hover {
+    background-color: #ffbaba;
+}
+
+#apagar:active {
+    background-color: #ff8a80;
+}
+
+.imagem-amor img {
+    width: 200px; /* Ajuste o tamanho da imagem */
+    border: 5px solid white;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.imagem-amor p {
+    color: #e91e63;
+    font-size: 1.2em;
+}
+.senha-input.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./laco.png" alt="Laço">
+            <h1>Nossa Senha</h1>
+            <p>Uma data especial para nós...</p>
+        </header>
+
+        <div class="senha-input">
+            <span class="lock-icon">&#128272;</span>
+            <input type="password" id="displaySenha" disabled placeholder="Digite a senha">
+        </div>
+
+        <div class="teclado">
+            <button data-numero="1">1</button>
+            <button data-numero="2">2</button>
+            <button data-numero="3">3</button>
+            <button data-numero="4">4</button>
+            <button data-numero="5">5</button>
+            <button data-numero="6">6</button>
+            <button data-numero="7">7</button>
+            <button data-numero="8">8</button>
+            <button data-numero="9">9</button>
+            <button data-numero=".">.</button>
+            <button data-numero="0">0</button>
+            <button id="apagar">&#9003;</button>
+        </div>
+
+        <div class="imagem-amor">
+            <img src="./ourphotos/4.jpg" alt="Foto">
+            <p>Eu te amo ❤️</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Cantinho Secreto</title>
+    <style>
+        /* --- Estilos base (copiados do index.html para manter a consistência) --- */
+        body {
+            font-family: sans-serif;
+            background-color: #fddde6; /* Rosa Claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffeef2;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px; /* Largura semelhante à imagem */
+        }
+
+        header img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            color: #e91e63;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            color: #6d6d6d;
+            margin-top: 0;
+        }
+
+        /* --- Novos estilos para os cartões de opção --- */
+        .opcoes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Cria uma grade de 2 colunas */
+            gap: 15px; /* Espaçamento entre os cartões */
+            margin-top: 25px;
+        }
+
+        .opcao-link {
+            text-decoration: none; /* Remove o sublinhado do link */
+        }
+
+        .cartao {
+            background-color: #ffffff;
+            border: 1px solid #f8bbd0;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .cartao:hover {
+            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cartao-icone {
+            font-size: 2.5em; /* Tamanho do ícone (emoji) */
+        }
+
+        .cartao-texto {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #e91e63;
+            font-weight: bold;
+        }
+
+                /* Botão para voltar */
+        .botao-voltar {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: #e91e63;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .botao-voltar:hover {
+            background-color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./laco.png" alt="Laço"> <h1>Nosso Cantinho</h1>
+            <p>Escolha uma opção, Meu amor</p>
+        </header>
+
+        <main>
+            <div class="opcoes-container">
+                <a href="lembrancas.html" class="opcao-link">
+                    <div class="cartao">
+                        <span class="cartao-icone">🖼️</span>
+                        <span class="cartao-texto">Lembranças</span>
+                    </div>
+                </a>
+
+                <a href="calendario.html" class="opcao-link">
+                    <div class="cartao">
+                        <span class="cartao-icone">🗓️</span>
+                        <span class="cartao-texto">Calendário</span>
+                    </div>
+                </a>
+
+                <a href="memoria.html" class="opcao-link">
+                    <div class="cartao">
+                        <span class="cartao-icone">🧠</span>
+                        <span class="cartao-texto">Jogo da Memória</span>
+                    </div>
+                </a>
+
+                <a href="cartinha.html" class="opcao-link">
+                    <div class="cartao">
+                        <span class="cartao-icone">💌</span>
+                        <span class="cartao-texto">Uma Cartinha</span>
+                    </div>
+                </a>
+            </div>
+        </main>
+        <a href="./index.html" class="botao-voltar">← Voltar</a>
+        <a href="./Scrapbook.pdf" class="botao-voltar">ScrapBook</a>
+
+    </div>
+</body>
+</html>

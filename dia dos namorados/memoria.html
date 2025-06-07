@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória ❤️</title>
+    <style>
+        /* --- Estilos base (mantendo a consistência) --- */
+        body {
+            font-family: sans-serif;
+            background-color: #fddde6; /* Rosa Claro */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .container {
+            background-color: #ffeef2;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%; /* Aumenta a largura para acomodar as cartas */
+            max-width: 600px; /* Largura máxima */
+        }
+
+        header img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+
+        /* --- Estilos para o Jogo da Memória --- */
+        .jogo-da-memoria {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 colunas */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .carta {
+            width: 100%;
+            padding-bottom: 100%; /* Aspect ratio 1:1 */
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .carta.virada {
+            transform: rotateY(180deg);
+        }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            background-color: #ddd;
+        }
+
+        .frente {
+            background-color: white;
+            transform: rotateY(180deg);
+        }
+
+        .frente img {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .verso {
+            background-color: #f8bbd0; /* Um tom de rosa mais claro */
+            color: #e91e63;
+            font-weight: bold;
+        }
+
+        /* Estilos para a mensagem de fim de jogo */
+        .mensagem-final {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #e91e63;
+            font-weight: bold;
+            display: none; /* Inicialmente escondido */
+        }
+
+        /* Botão para voltar */
+        .botao-voltar {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: #e91e63;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .botao-voltar:hover {
+            background-color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./img/laco.png" alt="Laço">
+            <h1>Um Joguinho Pra Você</h1>
+            <p>Encontre os pares de fotos! ❤️</p>
+        </header>
+
+        <main>
+            <div class="jogo-da-memoria" id="jogo">
+                </div>
+
+            <p class="mensagem-final" id="mensagemFinal">Parabéns! Você encontrou todos os pares! 🎉</p>
+
+            <a href="amor.html" class="botao-voltar">← Voltar</a>
+        </main>
+    </div>
+
+    <script>
+        const jogoContainer = document.getElementById('jogo');
+        const mensagemFinal = document.getElementById('mensagemFinal');
+        let cartas = [];
+        let cartasViradas = [];
+        let podeVirar = true;
+
+        // Array com os caminhos das SUAS 6 fotos (adicione os seus caminhos aqui!)
+        const fotos = [
+            './ourphotos/9.jpg',
+            './ourphotos/10.jpg',
+            './ourphotos/6.jpg',
+            './ourphotos/7.jpg',
+            './ourphotos/3.jpg',
+            './ourphotos/1.jpg',
+        ];
+
+        // Duplica as fotos para criar os pares e embaralha
+        const fotosDuplicadas = [...fotos, ...fotos];
+        function embaralhar(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = array [i];
+                array [i] = array [j];
+                array [j] = temp;
+            }
+        }
+        embaralhar(fotosDuplicadas);
+
+        // Cria as cartas no HTML
+        fotosDuplicadas.forEach((foto, index) => {
+            const cartaDiv = document.createElement('div');
+            cartaDiv.classList.add('carta');
+            cartaDiv.dataset.index = index;
+
+            const frenteDiv = document.createElement('div');
+            frenteDiv.classList.add('face', 'frente');
+            const img = document.createElement('img');
+            img.src = foto;
+            img.alt = 'Foto do casal';
+            frenteDiv.appendChild(img);
+
+            const versoDiv = document.createElement('div');
+            versoDiv.classList.add('face', 'verso');
+            versoDiv.textContent = '?';
+
+            cartaDiv.appendChild(frenteDiv);
+            cartaDiv.appendChild(versoDiv);
+
+            cartaDiv.addEventListener('click', virarCarta);
+            jogoContainer.appendChild(cartaDiv);
+            cartas.push(cartaDiv);
+        });
+
+        function virarCarta() {
+            if (!podeVirar || this.classList.contains('virada') || cartasViradas.length === 2) {
+                return;
+            }
+
+            this.classList.add('virada');
+            cartasViradas.push(this);
+
+            if (cartasViradas.length === 2) {
+                podeVirar = false;
+                setTimeout(verificarMatch, 700);
+            }
+        }
+
+        function verificarMatch() {
+            const carta1 = cartasViradas [0];
+            const carta2 = cartasViradas [1];
+            const index1 = parseInt(carta1.dataset.index);
+            const index2 = parseInt(carta2.dataset.index);
+
+            if (fotosDuplicadas [index1] === fotosDuplicadas [index2]) {
+                // As cartas combinam
+                carta1.removeEventListener('click', virarCarta);
+                carta2.removeEventListener('click', virarCarta);
+                cartasViradas = [];
+                podeVirar = true;
+                verificarFimDoJogo();
+            } else {
+                // As cartas não combinam
+                setTimeout(() => {
+                    carta1.classList.remove('virada');
+                    carta2.classList.remove('virada');
+                    cartasViradas = [];
+                    podeVirar = true;
+                }, 1000);
+            }
+        }
+
+        function verificarFimDoJogo() {
+            const cartasNaoViradas = document.querySelectorAll('.carta:not(.virada)');
+            if (cartasNaoViradas.length === 0) {
+                mensagemFinal.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

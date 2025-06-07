@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossas Lembranças ✨</title>
+    <style>
+        /* --- ESTILOS ATUALIZADOS --- */
+        body {
+            font-family: sans-serif;
+            background-color: #fddde6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .container {
+            background-color: #ffeef2;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+
+        header img { width: 40px; margin-bottom: 10px; }
+        header h1 { color: #e91e63; margin-bottom: 5px; }
+        header p { color: #6d6d6d; margin-top: 0; margin-bottom: 20px; }
+
+        .galeria-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+
+        .polaroid {
+            /* ESTILO BASE DA POLAROID - A POSIÇÃO SERÁ CONTROLADA PELO JS */
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px 8px 18px 8px;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            width: 140px;
+            /* A TRANSIÇÃO SUAVE É IMPORTANTE PARA O EFEITO */
+            transition: all 0.6s ease-in-out;
+        }
+
+        .polaroid img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        /* OS ESTILOS DE POSIÇÃO DOS IDs FORAM REMOVIDOS DAQUI,
+           POIS O JAVASCRIPT AGORA CUIDA DE TUDO. */
+
+        .botao-voltar {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background-color: #e91e63;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .botao-voltar:hover { background-color: #c2185b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./laco.png" alt="Laço">
+            <h1>Nossas Lembranças</h1>
+            <p>Clique na foto da frente para girar a pilha!</p>
+        </header>
+
+        <main>
+            <div class="galeria-container">
+                <div class="polaroid" id="foto1">
+                    <img src="./ourphotos/1.jpg" alt="Lembrança 1">
+                </div>
+                <div class="polaroid" id="foto2">
+                    <img src="./ourphotos/2.jpg" alt="Lembrança 2">
+                </div>
+                <div class="polaroid" id="foto3">
+                    <img src="./ourphotos/3.jpg" alt="Lembrança 3">
+                </div>
+                <div class="polaroid" id="foto4">
+                    <img src="./ourphotos/5.jpg" alt="Lembrança 4">
+                </div>
+                <div class="polaroid" id="foto5">
+                    <img src="./ourphotos/8.jpg" alt="Lembrança 5">
+                </div>
+            </div>
+
+            <a href="amor.html" class="botao-voltar">← Voltar</a>
+        </main>
+    </div>
+
+    <script>
+        // --- NOVA LÓGICA DE ROTAÇÃO COMPLETA ---
+
+        // 1. Guardamos as "receitas" de cada posição em uma lista.
+        const posicoes = [
+            { top: '10px', left: '10%', transform: 'rotate(-10deg)', zIndex: 5 }, // Posição 1 (frente)
+            { top: '30px', left: '35%', transform: 'rotate(8deg)',  zIndex: 4 }, // Posição 2
+            { top: '55px', left: '55%', transform: 'rotate(-5deg)', zIndex: 3 }, // Posição 3
+            { top: '80px', left: '25%', transform: 'rotate(12deg)', zIndex: 2 }, // Posição 4
+            { top: '100px', left: '65%', transform: 'rotate(-7deg)', zIndex: 1 }  // Posição 5 (fundo)
+        ];
+
+        // 2. Pegamos os elementos das fotos e colocamos em uma lista, na ordem inicial.
+        let polaroids = [
+            document.getElementById('foto1'),
+            document.getElementById('foto2'),
+            document.getElementById('foto3'),
+            document.getElementById('foto4'),
+            document.getElementById('foto5')
+        ];
+
+        // 3. Função para aplicar os estilos nas fotos de acordo com a ordem atual.
+        function aplicarEstilos() {
+            polaroids.forEach((polaroid, index) => {
+                let estilo = posicoes[index];
+                polaroid.style.top = estilo.top;
+                polaroid.style.left = estilo.left;
+                polaroid.style.transform = estilo.transform;
+                polaroid.style.zIndex = estilo.zIndex;
+            });
+        }
+
+        // 4. A MÁGICA: Adicionamos o evento de clique APENAS na foto da frente.
+        function adicionarEventoDeClique() {
+            // Removemos eventos antigos para não acumular
+            polaroids.forEach(p => p.onclick = null);
+
+            // A foto da frente é sempre a primeira da nossa lista
+            const fotoDaFrente = polaroids[0];
+
+            fotoDaFrente.addEventListener('click', function rotacionarPilha() {
+                // Remove o listener para evitar cliques duplos durante a animação
+                fotoDaFrente.removeEventListener('click', rotacionarPilha);
+
+                // Reorganiza a lista: o primeiro elemento vai para o final.
+                polaroids.push(polaroids.shift());
+
+                // Aplica os novos estilos na nova ordem das fotos.
+                aplicarEstilos();
+
+                // Depois de 1 segundo, permite clicar na nova foto da frente novamente.
+                setTimeout(adicionarEventoDeClique, 600); // 600ms = tempo da transição
+            });
+        }
+        
+        // Inicia tudo: aplica os estilos iniciais e prepara o primeiro clique.
+        aplicarEstilos();
+        adicionarEventoDeClique();
+
+    </script>
+</body>
+</html>
